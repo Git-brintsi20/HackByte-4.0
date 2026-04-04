@@ -8,9 +8,10 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'rounded-xl border shadow-sm',
+      'elixa-card rounded-xl border shadow-sm',
       className
     )}
+    data-elixa-card="true"
     {...props}
   />
 ))
