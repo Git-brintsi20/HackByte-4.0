@@ -2,15 +2,11 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Bebas_Neue, Space_Grotesk } from 'next/font/google'
 import { motion } from 'framer-motion'
 import { CalendarRange, Crown, GanttChartSquare, Rocket } from 'lucide-react'
 import { GoogleAuthCard } from '@/components/auth/google-auth-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-
-const titleFont = Bebas_Neue({ subsets: ['latin'], weight: '400' })
-const bodyFont = Space_Grotesk({ subsets: ['latin'], weight: ['400', '500', '700'] })
 
 const modules = [
   {
@@ -41,7 +37,7 @@ export default function LandingPage() {
 
   return (
     <main
-      className={`${bodyFont.className} min-h-screen overflow-hidden bg-slate-950 text-slate-100`}
+      className="min-h-screen overflow-hidden bg-slate-950 text-slate-100 font-sans"
       style={{
         backgroundImage:
           'radial-gradient(circle at 20% 10%, rgba(45,212,191,0.24), transparent 35%), radial-gradient(circle at 80% 20%, rgba(56,189,248,0.2), transparent 30%), linear-gradient(120deg, #020617 0%, #0f172a 45%, #082f49 100%)',
@@ -51,7 +47,7 @@ export default function LandingPage() {
         <header className="mb-10 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-200">ELIXA Command Deck</p>
-            <h1 className={`${titleFont.className} text-5xl leading-none text-white sm:text-6xl`}>
+            <h1 className="text-5xl font-black uppercase tracking-[0.08em] leading-none text-white sm:text-6xl">
               Event Command
             </h1>
           </div>
