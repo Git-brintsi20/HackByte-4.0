@@ -1,0 +1,69 @@
+/**
+ * Orchestration Auth API Route
+ * Validates access codes and returns operator info
+ */
+
+import { NextResponse } from 'next/server'
+import { getOperatorByCode, updateOperatorLastActive, loadOrchestrationEvent } from '@/lib/orchestration-db'
+
+export async function POST(req: Request) {
+  try {
+    const { access_code, event_id } = await req.json()
+
+    if (!access_code || !event_id) {
+      return NextResponse.json(
+        { success: false, error: 'access_code and event_id are required' },
+        { status: 400 }
+      )
+    }
+
+    // First check if event exists
+    const event = await loadOrchestrationEvent(event_id)
+    if (!event) {
+      console.log(`[Auth] Event not found: ${event_id}`)
+      return NextResponse.json(
+        { success: false, error: 'Event not found. It may have expired or the server was restarted.' },
+        { status: 404 }
+      )
+    }
+
+    console.log(`[Auth] Event found: ${event.name}, operators: ${event.operators.map(o => o.operator_id).join(', ')}`)
+    console.log(`[Auth] Looking for access code: ${access_code}`)
+
+    // Look up operator by code
+    const operator = await getOperatorByCode(event_id, access_code)
+
+    if (!operator) {
+      console.log(`[Auth] Operator not found for code: ${access_code}`)
+      return NextResponse.json(
+        { success: false, error: 'Invalid access code. Please check the code and try again.' },
+        { status: 401 }
+      )
+    }
+
+    // Update last active timestamp
+    await updateOperatorLastActive(event_id, operator.operator_id)
+
+    // Return operator info (client stores in localStorage)
+    return NextResponse.json({
+      success: true,
+      data: {
+        operator_id: operator.operator_id,
+        event_id: operator.event_id,
+        role: operator.role,
+        label: operator.label,
+        scope: operator.scope,
+        name: operator.name,
+      },
+    })
+  } catch (error) {
+    console.error('Orchestration auth error:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Authentication failed',
+      },
+      { status: 500 }
+    )
+  }
+}

@@ -307,3 +307,116 @@ export interface SummaryResponse {
   highlights: string[]
   statistics: Record<string, number>
 }
+
+// ============ Event Orchestration Types ============
+
+export type OrchestrationPhaseId = 'permissions' | 'venue' | 'sponsors' | 'registrations' | 'volunteers' | 'gonogo'
+export type OrchestrationTaskStatus = 'locked' | 'available' | 'in_progress' | 'completed' | 'blocked'
+export type OrchestrationTaskPriority = 'critical' | 'high' | 'medium' | 'low'
+export type OrchestrationCheckpointStatus = 'locked' | 'available' | 'passed' | 'failed'
+export type OrchestrationOperatorRole = 'director' | 'venue_lead' | 'sponsor_lead' | 'tech_lead' | 'volunteer_coord' | 'volunteer'
+export type OrchestrationEventStatus = 'planning' | 'active' | 'completed'
+
+export interface OrchestrationTask {
+  task_id: string
+  event_id: string
+  title: string
+  description: string
+  phase: OrchestrationPhaseId
+  status: OrchestrationTaskStatus
+  assigned_role: OrchestrationOperatorRole
+  assigned_to?: string // specific operator_id
+  depends_on: string[] // task_ids
+  deadline?: number // unix timestamp
+  priority: OrchestrationTaskPriority
+  completed_at?: number
+  completed_by?: string // operator_id
+  notes?: string
+  created_at: number
+}
+
+export interface OrchestrationPhase {
+  id: OrchestrationPhaseId
+  label: string
+  tasks: OrchestrationTask[]
+}
+
+export interface OrchestrationOperator {
+  operator_id: string // e.g., "OP-VEN-4A2B" or "DIR-XXXX"
+  event_id: string
+  role: OrchestrationOperatorRole
+  label: string // human-readable, e.g., "Venue Lead"
+  scope: OrchestrationPhaseId[] // phases this operator can update
+  name?: string
+  last_active?: number
+}
+
+export interface OrchestrationCheckpoint {
+  checkpoint_id: string
+  event_id: string
+  phase: OrchestrationPhaseId
+  name: string // e.g., "Venue Confirmed"
+  status: OrchestrationCheckpointStatus
+  required_task_ids: string[]
+  passed_at?: number
+  passed_by?: string // director operator_id
+}
+
+export interface OrchestrationEvent {
+  event_id: string
+  name: string
+  description: string
+  date: number // unix timestamp
+  venue: string
+  participant_count: number
+  status: OrchestrationEventStatus
+  created_at: number
+  updated_at: number
+  director_id: string
+  tasks: OrchestrationTask[]
+  operators: OrchestrationOperator[]
+  checkpoints: OrchestrationCheckpoint[]
+}
+
+// AI-generated config (before commit)
+export interface OrchestrationEventConfigInput {
+  name: string
+  date: string // ISO8601
+  venue: string
+  participant_count: number
+  phases: Array<{
+    id: OrchestrationPhaseId
+    label: string
+    tasks: Array<{
+      title: string
+      description: string
+      assigned_role: string
+      priority: OrchestrationTaskPriority
+      deadline: string // ISO8601
+      depends_on_titles: string[] // resolved to IDs at commit time
+    }>
+  }>
+  roles: Array<{
+    role: OrchestrationOperatorRole
+    label: string
+    scope: OrchestrationPhaseId[]
+  }>
+}
+
+export interface OrchestrationTaskHistoryEntry {
+  task_id: string
+  event_id: string
+  from_status: OrchestrationTaskStatus
+  to_status: OrchestrationTaskStatus
+  changed_by: string // operator_id
+  timestamp: number
+  notes?: string
+}
+
+export interface OrchestrationSession {
+  operator_id: string
+  event_id: string
+  role: OrchestrationOperatorRole
+  scope: OrchestrationPhaseId[]
+  label: string
+}

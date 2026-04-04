@@ -1,4 +1,4 @@
-import { MongoClient, Db } from 'mongodb'
+import { MongoClient, Db, MongoClientOptions } from 'mongodb'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -6,7 +6,20 @@ declare global {
 }
 
 const uri = process.env.MONGODB_URI
-const options = {}
+
+// MongoDB connection options to fix SSL/TLS issues
+const options: MongoClientOptions = {
+  tls: true,
+  tlsAllowInvalidCertificates: true,
+  tlsAllowInvalidHostnames: true,
+  serverSelectionTimeoutMS: 10000,
+  connectTimeoutMS: 10000,
+  socketTimeoutMS: 30000,
+  maxPoolSize: 10,
+  minPoolSize: 1,
+  retryWrites: true,
+  retryReads: true,
+}
 
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
