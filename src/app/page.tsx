@@ -38,54 +38,88 @@ export default function LandingPage() {
   )
 
   useEffect(() => {
-    if (!vantaEffect.current && vantaRef.current) {
-      // Wait for VANTA to be available
-      const initVanta = () => {
-        if (typeof window !== 'undefined' && (window as any).VANTA && (window as any).THREE) {
-          console.log('Initializing Vanta.js Halo effect')
-          vantaEffect.current = (window as any).VANTA.HALO({
-            el: vantaRef.current,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            backgroundColor: 0x06040d,
-            amplitudeFactor: 1.5,
-            xOffset: 0.2,
-            yOffset: -0.1,
-            size: 1.5,
-            baseColor: 0x7c3aed,
-            highlightColor: 0xa855f7
-          })
-        } else {
-          console.log('VANTA or THREE not available yet')
+    if (!vantaRef.current || vantaEffect.current) {
+      return
+    }
+
+    let cancelled = false
+    let checkVanta: ReturnType<typeof setInterval> | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+    const getHaloFactory = () => {
+      const runtimeWindow = window as Window & {
+        THREE?: unknown
+        VANTA?: {
+          HALO?: (options: Record<string, unknown>) => { destroy?: () => void }
         }
       }
 
-      // Check if VANTA is already loaded
-      if ((window as any).VANTA && (window as any).THREE) {
-        initVanta()
-      } else {
-        // Wait for scripts to load with more frequent checks
-        const checkVanta = setInterval(() => {
-          if ((window as any).VANTA && (window as any).THREE) {
-            initVanta()
-            clearInterval(checkVanta)
-          }
-        }, 50)
+      if (runtimeWindow.THREE && typeof runtimeWindow.VANTA?.HALO === 'function') {
+        return runtimeWindow.VANTA.HALO
+      }
 
-        // Cleanup interval after 15 seconds
-        setTimeout(() => {
-          clearInterval(checkVanta)
-          console.log('Vanta.js loading timeout')
-        }, 15000)
+      return null
+    }
+
+    const initVanta = () => {
+      const haloFactory = getHaloFactory()
+
+      if (!haloFactory || !vantaRef.current || vantaEffect.current || cancelled) {
+        return false
+      }
+
+      try {
+        vantaEffect.current = haloFactory({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          backgroundColor: 0x06040d,
+          amplitudeFactor: 1.5,
+          xOffset: 0.2,
+          yOffset: -0.1,
+          size: 1.5,
+          baseColor: 0x7c3aed,
+          highlightColor: 0xa855f7,
+        })
+        return true
+      } catch (error) {
+        console.error('Failed to initialize Vanta Halo:', error)
+        return true
       }
     }
 
+    if (!initVanta()) {
+      checkVanta = setInterval(() => {
+        if (initVanta() && checkVanta) {
+          clearInterval(checkVanta)
+          checkVanta = null
+        }
+      }, 100)
+
+      timeoutId = setTimeout(() => {
+        if (checkVanta) {
+          clearInterval(checkVanta)
+          checkVanta = null
+        }
+        console.warn('Vanta Halo was not available before timeout; using static background instead.')
+      }, 10000)
+    }
+
     return () => {
+      cancelled = true
+
+      if (checkVanta) {
+        clearInterval(checkVanta)
+      }
+
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+
       if (vantaEffect.current) {
-        console.log('Destroying Vanta.js effect')
         vantaEffect.current.destroy()
         vantaEffect.current = null
       }
