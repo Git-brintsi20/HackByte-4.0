@@ -769,6 +769,20 @@ export default function DashboardPage() {
                   ))}
                 </CardContent>
               </Card>
+
+              {/* Activity Feed */}
+              <ActivityFeed eventId={eventId} />
+
+              {/* Announcements Panel (Director Only) */}
+              {isDirector && session && (
+                <AnnouncementsPanel
+                  eventId={eventId}
+                  operatorId={session.operator_id}
+                  announcements={announcements}
+                  isDirector={isDirector}
+                  onAnnouncementSent={handleRefresh}
+                />
+              )}
             </div>
 
           </aside>
