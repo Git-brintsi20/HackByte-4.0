@@ -38,75 +38,91 @@ export default function LandingPage() {
   )
 
   useEffect(() => {
-    if (!vantaEffect.current && vantaRef.current) {
-      // Wait for VANTA to be available
-      const initVanta = () => {
-        if (typeof window !== 'undefined' && (window as any).VANTA && (window as any).THREE) {
-          console.log('Initializing Vanta.js effect')
-          
-          // Try HALO first, fallback to WAVES if not available
-          try {
-            if ((window as any).VANTA.HALO) {
-              vantaEffect.current = (window as any).VANTA.HALO({
-                el: vantaRef.current,
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                backgroundColor: 0x06040d,
-                amplitudeFactor: 1.5,
-                xOffset: 0.2,
-                yOffset: -0.1,
-                size: 1.5,
-                baseColor: 0x7c3aed,
-                highlightColor: 0xa855f7
-              })
-            } else if ((window as any).VANTA.WAVES) {
-              // Fallback to WAVES effect
-              vantaEffect.current = (window as any).VANTA.WAVES({
-                el: vantaRef.current,
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                backgroundColor: 0x06040d,
-                color: 0x7c3aed,
-                shininess: 30,
-                waveHeight: 15,
-                waveSpeed: 0.75,
-                zoom: 0.75
-              })
-            } else {
-              console.log('No suitable Vanta effect available')
-            }
-          } catch (error) {
-            console.error('Failed to initialize Vanta effect:', error)
-          }
-        } else {
-          console.log('VANTA or THREE not available yet')
+    if (!vantaRef.current || vantaEffect.current || typeof window === 'undefined') {
+      return
+    }
+
+    let cancelled = false
+    let checkVanta: ReturnType<typeof setInterval> | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+    const runtimeWindow = window as Window & {
+      THREE?: unknown
+      VANTA?: {
+        HALO?: (options: Record<string, unknown>) => { destroy?: () => void }
+        WAVES?: (options: Record<string, unknown>) => { destroy?: () => void }
+      }
+    }
+
+    const initVanta = () => {
+      if (cancelled || !vantaRef.current || vantaEffect.current) {
+        return false
+      }
+
+      if (!runtimeWindow.THREE || !runtimeWindow.VANTA) {
+        return false
+      }
+
+      try {
+        if (typeof runtimeWindow.VANTA.HALO === 'function') {
+          vantaEffect.current = runtimeWindow.VANTA.HALO({
+            el: vantaRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            backgroundColor: 0x06040d,
+            amplitudeFactor: 1.5,
+            xOffset: 0.2,
+            yOffset: -0.1,
+            size: 1.5,
+            baseColor: 0x7c3aed,
+            highlightColor: 0xa855f7,
+          })
+          return true
         }
+
+        if (typeof runtimeWindow.VANTA.WAVES === 'function') {
+          vantaEffect.current = runtimeWindow.VANTA.WAVES({
+            el: vantaRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            backgroundColor: 0x06040d,
+            color: 0x7c3aed,
+            shininess: 30,
+            waveHeight: 15,
+            waveSpeed: 0.75,
+            zoom: 0.75,
+          })
+          return true
+        }
+      } catch (error) {
+        console.error('Failed to initialize Vanta effect:', error)
+        return true
       }
 
-      // Check if VANTA is already loaded
-      if ((window as any).VANTA && (window as any).THREE) {
-        initVanta()
-      } else {
-        // Wait for scripts to load with more frequent checks
-        const checkVanta = setInterval(() => {
-          if ((window as any).VANTA && (window as any).THREE) {
-            initVanta()
-            clearInterval(checkVanta)
-          }
-        }, 100)
+      return false
+    }
 
-        // Cleanup interval after 10 seconds
-        setTimeout(() => {
+    if (!initVanta()) {
+      checkVanta = setInterval(() => {
+        if (initVanta() && checkVanta) {
           clearInterval(checkVanta)
-          console.log('Vanta.js loading timeout - continuing without background effect')
-        }, 10000)
-      }
+          checkVanta = null
+        }
+      }, 100)
+
+      timeoutId = setTimeout(() => {
+        if (checkVanta) {
+          clearInterval(checkVanta)
+          checkVanta = null
+        }
+        console.warn('Vanta.js loading timeout - continuing without background effect')
+      }, 10000)
     }
 
     return () => {
@@ -122,8 +138,9 @@ export default function LandingPage() {
 
       if (vantaEffect.current) {
         try {
-          console.log('Destroying Vanta.js effect')
-          vantaEffect.current.destroy()
+          if (typeof vantaEffect.current.destroy === 'function') {
+            vantaEffect.current.destroy()
+          }
           vantaEffect.current = null
         } catch (error) {
           console.error('Error destroying Vanta effect:', error)
