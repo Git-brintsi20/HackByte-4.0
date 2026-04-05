@@ -23,7 +23,11 @@ import { ProgressRing } from '@/components/orchestration/progress-ring'
 import { OperatorCodesDisplay } from '@/components/orchestration/operator-codes-display'
 import { TaskManagement } from '@/components/orchestration/task-management'
 import { PHASE_LABELS } from '@/lib/orchestration-agent'
-import type { OrchestrationEvent, OrchestrationTask, OrchestrationSession, OrchestrationPhaseId } from '@/types'
+import { AnnouncementsPanel } from '@/components/orchestration/announcements-panel'
+import { ActivityFeed } from '@/components/orchestration/activity-feed'
+import { AnnouncementBar } from '@/components/orchestration/announcement-bar'
+import { announceCheckpointPassed } from '@/lib/speak'
+import type { OrchestrationEvent, OrchestrationTask, OrchestrationSession, OrchestrationPhaseId, OrchestrationAnnouncement } from '@/types'
 
 export default function DashboardPage() {
   const params = useParams()
@@ -31,6 +35,7 @@ export default function DashboardPage() {
 
   const [event, setEvent] = useState<OrchestrationEvent | null>(null)
   const [session, setSession] = useState<OrchestrationSession | null>(null)
+  const [announcements, setAnnouncements] = useState<OrchestrationAnnouncement[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [selectedTask, setSelectedTask] = useState<OrchestrationTask | null>(null)
@@ -51,11 +56,11 @@ export default function DashboardPage() {
     }
   }, [eventId])
 
-  // Fetch event data
+  // Fetch event data with announcements
   const fetchEvent = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/orchestration/action?event_id=${eventId}${session ? `&operator_id=${session.operator_id}` : ''}`
+        `/api/orchestration/action?event_id=${eventId}${session ? `&operator_id=${session.operator_id}` : ''}&include=announcements`
       )
       const data = await response.json()
 
@@ -63,7 +68,12 @@ export default function DashboardPage() {
         throw new Error(data.error || 'Failed to fetch event')
       }
 
-      setEvent(data.data)
+      setEvent(data.data.event || data.data) // Support both new and old response format
+      if (data.data.announcements) {
+        setAnnouncements(data.data.announcements)
+      } else if (data.data.event?.announcements) {
+        setAnnouncements(data.data.event.announcements)
+      }
     } catch (error) {
       console.error('Fetch error:', error)
       toast.error('Failed to load event data')
@@ -265,9 +275,9 @@ export default function DashboardPage() {
 
       toast.success(`${phase} checkpoint passed!`)
 
-      // Voice announcement for go/no-go
-      if (phase === 'gonogo' && event) {
-        speak(`All systems confirmed. ${event.name} is ready to launch.`)
+      // Voice announcement for checkpoint
+      if (event) {
+        announceCheckpointPassed(phase, event.name)
       }
 
       // Refresh event data
@@ -275,15 +285,6 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Checkpoint error:', error)
       toast.error(error instanceof Error ? error.message : 'Failed to pass checkpoint')
-    }
-  }
-
-  // Simple TTS function
-  const speak = (text: string) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text)
-      utterance.rate = 0.9
-      window.speechSynthesis.speak(utterance)
     }
   }
 
@@ -371,6 +372,9 @@ export default function DashboardPage() {
       }}
     >
       <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pt-8">
+        {/* Announcement Bar */}
+        <AnnouncementBar announcements={announcements} />
+
         <header className="mb-8">
           <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm lg:p-8">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start">

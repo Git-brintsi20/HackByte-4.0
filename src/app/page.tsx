@@ -110,6 +110,16 @@ export default function LandingPage() {
     }
 
     return () => {
+      cancelled = true
+
+      if (checkVanta) {
+        clearInterval(checkVanta)
+      }
+
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+
       if (vantaEffect.current) {
         try {
           console.log('Destroying Vanta.js effect')
