@@ -187,12 +187,12 @@ Mark task complete → Instant updates across all dashboards. Unlock dependent t
 
 **Full Demo Video**
 
-<a href="./public/Elixa-Demo.zip" download>
-  <img src="https://img.shields.io/badge/📥_Download_Demo_Video-543_MB-blue?style=for-the-badge" alt="Download Demo Video" />
+<a href="https://youtu.be/CcdWeXapRUU" target="_blank">
+  <img src="https://img.shields.io/badge/📺_Watch_on_YouTube-ELIXA_Demo-red?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo on YouTube" />
 </a>
 
 *Complete walkthrough: From event description to live execution*  
-*Click above to download the full demo video (Elixa.mp4 in ZIP format)*
+*Click above to watch the full demo video on YouTube*
 
 </div>
 
@@ -996,14 +996,14 @@ All operator dashboards stay in sync automatically. No race conditions or stale 
 
 <div align="center">
 
-<a href="./public/Elixa-Demo.zip" download>
-  <img src="https://img.shields.io/badge/📥_Download_Full_Demo-SpacetimeDB_in_Action-FF6B6B?style=for-the-badge" alt="Download Demo" />
+<a href="https://youtu.be/CcdWeXapRUU" target="_blank">
+  <img src="https://img.shields.io/badge/📺_Watch_Demo-SpacetimeDB_in_Action-FF6B6B?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch SpacetimeDB Demo" />
 </a>
 
 <br/><br/>
 
 *Demo showcases: SpacetimeDB real-time sync, 3-layer architecture, and live event orchestration*  
-*Download the ZIP file to watch the complete video demonstration*
+*Click above to watch the complete video demonstration on YouTube*
 
 </div>
 
