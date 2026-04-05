@@ -1,221 +1,189 @@
-# ⚡ **ELIXA**
+# ELIXA
 ## Event Orchestration Platform
 
-> _Describe your event. Watch it come alive._
+> Describe your event. Watch it come alive.
 
-**Technical Implementation Document**  
 HackByte 4.0 | PDPM IIITDM Jabalpur | MLH Official 2026 Season
 
----
+## Tech Stack
 
-## 🎯 **1. Project Overview**
+![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v3-06B6D4?logo=tailwindcss&logoColor=white)
+![MongoDB Atlas](https://img.shields.io/badge/MongoDB_Atlas-47A248?logo=mongodb&logoColor=white)
+![Gemini 2.5 Flash](https://img.shields.io/badge/Gemini-2.5_Flash-4285F4?logo=google&logoColor=white)
+![Firebase Auth](https://img.shields.io/badge/Firebase-Auth-FFCA28?logo=firebase&logoColor=black)
+![ElevenLabs](https://img.shields.io/badge/ElevenLabs-Turbo_v2-111111)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?logo=framer&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn/ui-Components-000000)
 
-### **What is Elixa?**
+## Overview
 
-Elixa is an **event orchestration platform** powered by a master AI agent. It transforms chaotic WhatsApp coordination into structured, real-time task management for hackathon and college fest organizers.
+Elixa is an AI-powered event orchestration platform that converts unstructured organizer discussions into a clear execution pipeline with tasks, owners, dependencies, and checkpoints.
 
-### **The Problem We Solve**
+It is built for hackathons and college events where teams must coordinate permissions, venue logistics, sponsors, registrations, volunteer management, and final Go/No-Go readiness.
 
-Before any major event, organizing teams juggle **30-60 critical tasks**:
-- 📋 Institute permissions & approvals
-- 🏢 Venue booking & logistics  
-- 💰 Sponsor outreach & confirmations
-- 📝 Registration setup & management
-- 👥 Volunteer coordination & briefing
-- ⚡ Tech infrastructure & final Go/No-Go
+## Problem We Solve
 
-**Current Reality:** One person holds everything in their head. WhatsApp chaos. Tasks fall through cracks.
+Before any major event, teams usually juggle 30-60 critical tasks in chats and calls. This often creates:
 
-### **Our Solution: The Checklist-to-Checkpoint Pipeline**
+- unclear ownership
+- hidden dependencies
+- delayed approvals and blockers
 
-| **Phase** | **Owner** | **What Happens** |
-|-----------|-----------|------------------|
-| 🛡️ **Permissions** | Director | Institute approvals, date confirmations |
-| 🏢 **Venue** | Venue Lead | Hall booking, AV setup, layout planning |
-| 💰 **Sponsors** | Sponsor Lead | Outreach, follow-ups, commitment tracking |
-| 📝 **Registrations** | Tech Lead | Platform setup, team shortlisting |
-| 👥 **Volunteers** | Volunteer Coord | Briefings, role assignments, schedules |
-| 🚀 **Go/No-Go** | Director | Final review & launch readiness |
+Elixa solves this with a checklist-to-checkpoint model where each phase has assigned owners and visible progress.
 
----
+## Checklist-to-Checkpoint Pipeline
 
-## 🏗️ **2. System Architecture**
+| Phase | Owner | Core Responsibility |
+|---|---|---|
+| Permissions | Director | institute approvals, date clearances |
+| Venue | Venue Lead | hall booking, AV, layout readiness |
+| Sponsors | Sponsor Lead | outreach, follow-ups, commitment tracking |
+| Registrations | Tech Lead | registration setup and technical readiness |
+| Volunteers | Volunteer Coordinator | role assignment, shifts, execution support |
+| Go/No-Go | Director | final cross-team readiness gate |
 
-### **Tech Stack Overview**
+## Product Screens
 
-| **Layer** | **Technology** | **Role** |
-|-----------|----------------|----------|
-| 🎨 **Frontend** | Next.js 14 + Tailwind CSS v3 | Manager dashboard, volunteer views |
-| 🗄️ **Database** | **🔥 MongoDB Atlas** | Task sync, event history, audit trails |
-| 🤖 **AI Engine** | **✨ Gemini 2.5 Flash** | Event parsing, task generation |
-| 🎭 **UI/UX** | shadcn/ui + Framer Motion | Glassy effects, smooth animations |
-| 🎤 **Voice** | **🔊 ElevenLabs Turbo v2** | Announcements, checkpoint narration |
-| 🔐 **Auth** | Firebase + localStorage | Google sign-in, role-based access |
+<table>
+  <tr>
+    <td valign="top" width="50%">
+      <h4>Before Login</h4>
+      <img src="public/beforeloginpage.png" alt="Before login screen" width="100%" />
+    </td>
+    <td valign="top" width="50%">
+      <h4>After Login</h4>
+      <img src="public/afterloginpage.png" alt="After login screen" width="100%" />
+    </td>
+  </tr>
+</table>
 
-> **⚠️ Note:** Uses Tailwind CSS v3 (NOT v4) for shadcn/ui compatibility
+<table>
+  <tr>
+    <td valign="top" width="50%">
+      <h4>Event Orchestration Entry</h4>
+      <img src="public/event-orchestration.png" alt="Event orchestration landing screen" width="100%" />
+    </td>
+    <td valign="top" width="50%">
+      <h4>Event Setup</h4>
+      <img src="public/event-setup.png" alt="Event setup screen" width="100%" />
+    </td>
+  </tr>
+</table>
 
-### **Request Flow Architecture**
+<table>
+  <tr>
+    <td valign="top" width="50%">
+      <h4>Plan Generation</h4>
+      <img src="public/generation-of-plan.png" alt="AI plan generation screen" width="100%" />
+    </td>
+    <td valign="top" width="50%">
+      <h4>Conversation Planner</h4>
+      <img src="public/conversation-event-planner.png" alt="Conversation based event planning" width="100%" />
+    </td>
+  </tr>
+</table>
+
+<img src="public/game-planning.png" alt="Live game planning mode" width="100%" />
+
+## System Architecture
+
+### Frontend
+
+- Next.js 14 App Router with TypeScript
+- Tailwind CSS v3 with shadcn/ui components
+- Animated interface patterns using Framer Motion
+- Event orchestration pages under `src/app/event-orchestration/`
+
+### API Layer
+
+Core orchestration APIs are under `src/app/api/orchestration/`:
+
+- `plan` for AI planning flow
+- `commit` for saving structured event plans
+- `auth` for operator code login
+- `action` for task status and operator actions
+- `checkpoint` for phase gate controls
+- `events` and `event/[id]` for event queries
+
+Additional orchestration utilities exist for announcements, summary, and tasks management.
+
+### AI + Data Layer
+
+- Gemini 2.5 Flash powers planning and structured generation
+- MongoDB Atlas persists events, operators, checkpoints, and task history
+- Dependency references are resolved before persistent writes
+
+### Sync and Session Model
+
+- optimistic UI updates for responsive task operations
+- MongoDB-backed state refresh through periodic polling
+- localStorage-backed operator session context
+
+## Request Flow
 
 ```mermaid
 graph TD
-    A[Manager describes event] --> B[Gemini 2.5 Flash parses]
-    B --> C[EventConfig generated]
-    C --> D[MongoDB stores tasks]
-    D --> E[Role codes created]
-    E --> F[Team coordination begins]
-Critical API Separation:
+    A[Manager describes event] --> B[Gemini 2.5 Flash plans event]
+    B --> C[Structured EventConfig returned]
+    C --> D[Commit API validates and resolves dependencies]
+    D --> E[MongoDB stores event and task graph]
+    E --> F[Dashboard and operator views reflect updates]
+```
 
-/api/orchestration/plan → ✨ Gemini streaming only
-/api/orchestration/commit → 🔥 MongoDB writes only
-🗄️ 3. Database Design
-MongoDB Collections
-📊 orchestration_events
-{
-  event_id: string,
-  name: string,
-  description: string,
-  date: number,
-  venue: string,
-  participant_count: number,
-  status: 'planning' | 'active' | 'completed',
-  director_id: string,
-  
-  tasks: [/* Task objects with dependencies */],
-  operators: [/* Role-based access codes */],
-  checkpoints: [/* Phase completion gates */]
-}
-📝 orchestration_task_history
-{
-  task_id: string,
-  event_id: string,
-  from_status: string,
-  to_status: string,
-  changed_by: string,
-  timestamp: number
-}
-🚨 Critical: ✨ Gemini returns depends_on_titles as strings. Must resolve to task_ids before 🔥 MongoDB storage.
+Critical separation:
 
-🤖 4. AI Agent Integration
-Gemini 2.5 Flash System Prompt
-You are Elixa's event planning agent. Parse plain English event descriptions into structured JSON.
+- `POST /api/orchestration/plan` handles AI planning only
+- `POST /api/orchestration/commit` handles persistence only
 
-RULES:
-1. Ask max 2 clarifying questions if critical info missing
-2. Generate realistic deadlines relative to event date  
-3. Always include Go/No-Go phase as final checkpoint
-4. Assign every task to a role - never leave empty
-5. Output ONLY valid JSON - no markdown, no explanation
+## Role-Based Access
 
-PHASES: permissions → venue → sponsors → registrations → volunteers → gonogo
-Temperature: 0.2 for consistent JSON output
+- Director: full control and checkpoint authority
+- Phase Leads: scoped actions for their owned phase
+- Volunteers: assigned-task execution and blocker reporting
 
-Two-Pass Dependency Resolution
-The system resolves task dependencies in two passes:
+## Secondary Module: Live Event Management
 
-First Pass: Generate all task IDs, build title→ID mapping
-Second Pass: Resolve depends_on_titles to actual task_ids
-⚡ 5. Real-Time Synchronization
-MongoDB Polling Strategy
-Since we use 🔥 MongoDB (not SpacetimeDB), real-time updates achieved through:
+`/game-planning` provides command-driven event execution support with:
 
-⚡ Optimistic UI updates for instant feedback
-🔄 5-second polling for data freshness
-📱 localStorage sessions for operator state
-🎯 Manual refresh triggers on critical actions
-Update Timeline
-| Action | Sync Time | Path | |------------|---------------|----------| | Task completion | ~5 seconds | Client → API → 🔥 MongoDB → polling | | Checkpoint pass | ~5 seconds | Client → API → 🔥 MongoDB → polling | | AI task generation | 2-8 seconds | ✨ Gemini → parse → 🔥 MongoDB | | Voice announcements | ~6 seconds | 🔥 MongoDB + 🔊 ElevenLabs |
+- scoreboard and team status operations
+- speech-driven command interpretation
+- AI-assisted fallback behavior for command processing
 
-🔐 6. Role-Based Access Control
-Access Hierarchy
-| Role | Code Format | Scope | Permissions | |----------|-----------------|-----------|-----------------| | 👑 Director | DIR-XXXX | All phases | Create, pass checkpoints, override | | 🏢 Venue Lead | OP-VEN-XXXX | Venue only | Mark venue tasks, add notes | | 💰 Sponsor Lead | OP-SPO-XXXX | Sponsors only | Track sponsor confirmations | | 💻 Tech Lead | OP-TEC-XXXX | Registrations | Manage tech tasks | | 👥 Vol Coordinator | OP-VOL-XXXX | Volunteers | Coordinate team assignments | | 🙋 Volunteer | OP-V-XXXX | Assigned tasks | Complete own tasks |
+## Environment Variables
 
-Login Flow
-Enter access code → 🔥 MongoDB lookup
-Create localStorage session
-Redirect to role-appropriate dashboard
-All API calls include operator context
-🎨 7. Frontend Architecture
-Three Core Screens
-🎯 Screen 1: Manager Setup Chat
-Path: /event-orchestration/setup
-✨ Gemini streaming conversation
-EventConfig preview before commit
-Generated operator codes display
-📊 Screen 2: Manager Dashboard
-Path: /event-orchestration/dashboard/[event_id]
-Horizontal phase cards with progress
-Live completion percentage
-Operator activity feed
-✅ Screen 3: Volunteer Task View
-Path: /event-orchestration/volunteer/[event_id]
-Scope-filtered task list
-Available/locked/completed states
-Notes and blocker flagging
-Key Components
-| Component | Purpose | |---------------|-------------| | PlanningChat | ✨ Gemini streaming interface | | EventConfigPreview | Task structure preview | | PhaseBoard | Dashboard phase cards | | TaskCard | Individual task management | | ProgressRing | Animated completion tracking |
+```bash
+# AI
+GOOGLE_GENERATIVE_AI_API_KEY=
+GROQ_API_KEY=
+ELEVENLABS_API_KEY=
 
-🎭 Glassy Design System
-.glass-card {
-  backdrop-filter: blur(12px);
-  background: rgba(26, 21, 40, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.5);
-}
+# Database
+MONGODB_URI=
 
-.glass-text {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.85));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 25px rgba(124, 58, 237, 0.6);
-}
-🛠️ 8. API Routes
-| Endpoint | Auth | Function | |--------------|----------|--------------| | POST /api/orchestration/plan | None | ✨ Gemini streaming (no DB writes) | | POST /api/orchestration/commit | Director | 🔥 MongoDB EventConfig storage | | POST /api/orchestration/auth | None | Access code validation | | POST /api/orchestration/action | Operator | Task completion, flagging | | POST /api/orchestration/checkpoint | Director | Phase checkpoint control | | GET /api/orchestration/events | None | Event listing (filtered) |
-
-🎮 9. Secondary Feature: Live Event Management
-Game Planning Mode (/game-planning)
-🏆 Real-time animated scoreboards
-🎤 Web Speech API voice commands
-🤖 ✨ Gemini/Groq AI agent fallback
-🎨 React Spring score animations
-🎯 Team status management (active/frozen/eliminated)
-Command Pattern Matching
-const PATTERNS = [
-  { pattern: /team (\w+) correct/i, action: 'add_score', delta: 10 },
-  { pattern: /start timer (\d+) minutes/i, action: 'timer', state: 'start' },
-  { pattern: /eliminate (\w+)/i, action: 'eliminate_team' }
-]
-🔧 10. Environment Setup
-# 🤖 AI Services
-GOOGLE_GENERATIVE_AI_API_KEY=    # ✨ Gemini 2.5 Flash
-GROQ_API_KEY=                    # Groq fallback (optional)
-ELEVENLABS_API_KEY=              # 🔊 ElevenLabs TTS
-
-# 🗄️ Database  
-MONGODB_URI=                     # 🔥 MongoDB Atlas
-
-# 🔐 Authentication
-NEXT_PUBLIC_FIREBASE_API_KEY=    # Firebase Google Auth
+# Firebase Auth
+NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
-✅ 11. Implementation Status
-🎯 Fully Implemented
-✅ Event Orchestration: Complete AI-powered task management
-✅ AI Integration: ✨ Gemini planning, mid-event commands, summaries
-✅ Database: 🔥 MongoDB persistence with audit trails
-✅ Voice System: Web Speech API + 🔊 ElevenLabs TTS
-✅ UI/UX: Comprehensive glassy effects with animations
-✅ Auth: Firebase Google sign-in with role-based access
-✅ Live Events: Basic quiz mode with voice commands
-❌ Not Implemented (Removed Claims)
-❌ SpacetimeDB: Uses 🔥 MongoDB with polling instead
-❌ Real-time <300ms: Uses ~5 second polling intervals
-❌ iron-session: Uses localStorage for session management
-❌ Claude Sonnet 4: Uses ✨ Gemini 2.5 Flash throughout
-🚀 Ready to Launch
-Elixa delivers a complete event orchestration solution that transforms chaotic WhatsApp coordination into structured, AI-powered task management. The core value proposition is fully realized with room for future enhancements.
+```
 
-Primary Use Cases: ✅ Event Orchestration - Complete and production-ready
- 🔄 Live Event Management - Basic functionality implemented
+## Implementation Status
 
-Built with ❤️ for HackByte 4.0 | PDPM IIITDM Jabalpur
+Implemented and aligned with this codebase:
+
+- AI-assisted event orchestration workflow
+- role-based operator access and scoped task actions
+- checkpoint-aware progression model
+- MongoDB persistence with historical state transitions
+- game-planning support for live operations
+
+Current constraints documented in implementation:
+
+- polling-based sync model instead of sub-second realtime transport
+- localStorage-backed session mechanism
+
+## Built For
+
+HackByte 4.0 | PDPM IIITDM Jabalpur

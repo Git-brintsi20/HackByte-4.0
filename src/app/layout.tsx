@@ -16,24 +16,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased min-h-screen relative">
+      <body className="font-sans antialiased min-h-screen relative bg-[#06040d]">
         {/* Floating glassy background elements */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
           {/* Animated glassy orbs */}
           <div className="absolute top-1/4 left-1/4 w-64 h-64 glass-animated">
-            <div className="w-full h-full rounded-full glass-overlay opacity-20"></div>
+            <div className="w-full h-full rounded-full bg-purple-500/20 blur-2xl"></div>
           </div>
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 glass-animated" style={{ animationDelay: '2s' }}>
-            <div className="w-full h-full rounded-full glass-overlay opacity-15"></div>
+            <div className="w-full h-full rounded-full bg-blue-500/20 blur-2xl"></div>
           </div>
           <div className="absolute top-1/2 right-1/3 w-32 h-32 glass-animated" style={{ animationDelay: '4s' }}>
-            <div className="w-full h-full rounded-full glass-overlay opacity-25"></div>
+            <div className="w-full h-full rounded-full bg-violet-500/25 blur-xl"></div>
           </div>
-          
+
           {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/5 via-transparent to-blue-900/5"></div>
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
         </div>
         
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>

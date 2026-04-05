@@ -152,7 +152,7 @@ export default function LandingPage() {
   return (
     <main
       ref={vantaRef}
-      className="min-h-screen overflow-hidden bg-[#06040d] text-slate-100 font-sans relative"
+      className="min-h-screen overflow-hidden text-slate-100 font-sans relative"
     >
       {/* Content overlay with backdrop blur for better readability */}
       <div className="relative z-10 mx-auto max-w-7xl px-6 pb-20 pt-10 sm:px-10">

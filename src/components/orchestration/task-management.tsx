@@ -22,6 +22,7 @@ interface TaskManagementProps {
   operatorId: string
   tasks: OrchestrationTask[]
   onTasksUpdated: () => void
+  isDirector?: boolean
 }
 
 const PHASES: { id: OrchestrationPhaseId; label: string }[] = [
@@ -62,7 +63,7 @@ const defaultForm: TaskForm = {
   depends_on: [],
 }
 
-export function TaskManagement({ eventId, operatorId, tasks, onTasksUpdated }: TaskManagementProps) {
+export function TaskManagement({ eventId, operatorId, tasks, onTasksUpdated, isDirector = true }: TaskManagementProps) {
   const [isAddingTask, setIsAddingTask] = useState(false)
   const [editingTask, setEditingTask] = useState<OrchestrationTask | null>(null)
   const [form, setForm] = useState<TaskForm>(defaultForm)

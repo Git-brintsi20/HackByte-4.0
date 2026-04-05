@@ -15,6 +15,8 @@ import {
   getActivityFeed,
 } from '@/lib/orchestration-db'
 
+export const dynamic = 'force-dynamic'
+
 type ActionType = 'complete_task' | 'flag_blocker' | 'add_note' | 'create_announcement'
 
 interface ActionPayload {

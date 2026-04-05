@@ -11,6 +11,8 @@ import {
 import { generateUUID } from '@/lib/orchestration-agent'
 import type { OrchestrationTask, OrchestrationPhaseId, OrchestrationOperatorRole } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 // GET - Get tasks for an event
 export async function GET(req: Request) {
   try {
