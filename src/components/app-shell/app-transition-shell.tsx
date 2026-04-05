@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, Suspense, type ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { CardEffectsBootstrap } from '@/components/app-shell/card-effects-bootstrap'
@@ -23,7 +23,7 @@ export function useRouteTransition() {
   return useContext(RouteTransitionContext)
 }
 
-export function AppTransitionShell({ children }: { children: ReactNode }) {
+function TransitionShellContent({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const shouldReduceMotion = useReducedMotion()
@@ -87,5 +87,20 @@ export function AppTransitionShell({ children }: { children: ReactNode }) {
         </AnimatePresence>
       </div>
     </RouteTransitionContext.Provider>
+  )
+}
+
+export function AppTransitionShell({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={
+      <div className="relative min-h-screen overflow-x-clip">
+        <CardEffectsBootstrap />
+        <div className="min-h-screen will-change-transform">
+          {children}
+        </div>
+      </div>
+    }>
+      <TransitionShellContent>{children}</TransitionShellContent>
+    </Suspense>
   )
 }
